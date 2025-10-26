@@ -206,3 +206,4 @@ const qrGenerator = new QRGeneration("970407", "2543663452");
 
 console.log("QR String:", qrGenerator.generateQR());
 console.log("Components:", qrGenerator.getComponents());
+
