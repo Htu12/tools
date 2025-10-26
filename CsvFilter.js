@@ -4,7 +4,7 @@ const fs = require('fs');
 
 class CsvFilter {
     #CONSTANT = {
-        DEFAULT_FILEPATH: "./nhansu_ttlt_vii.csv"
+        DEFAULT_FILEPATH: "./nhansu_vii.csv"
     }
 
     /**
@@ -21,8 +21,11 @@ class CsvFilter {
     #handelReadFile() {
         let result = []
         fs.readFileSync(this.filePath, "utf-8").split("\n").forEach(member => {
+            if(!member.trim()) return; // skip empty lines
+
+            // console.log(member);
             const [memberNo, fullName, phoneNumber, dateOfBirth, address, clubCommittee, position] = member.split(",").slice(0, 7);
-            result.push({
+            let obj = {
                 memberNo: memberNo.trim(),
                 fullName: fullName.trim(),
                 phoneNumber: phoneNumber.trim(),
@@ -30,7 +33,8 @@ class CsvFilter {
                 address: address.trim(),
                 clubCommittee: clubCommittee.trim(),
                 position: position.trim()
-            });
+            }
+            result.push(obj);
         });
 
         return result;
@@ -96,19 +100,8 @@ class CsvFilter {
      * Writes the member data to a new CSV file.
      * @param {String} path - The file path to write the new CSV file.
      */
-    writeNewFile(path) {
-        const data = this.#handelReadFile();
-        const csvContent = data.map(member => {
-            return `${member.memberNo},
-                    ${member.fullName},
-                    ${member.phoneNumber},
-                    ${member.dateOfBirth},
-                    ${member.address},
-                    ${member.clubCommittee},
-                    ${member.position}`;
-        }).join("\n");
-
-        fs.writeFileSync(path, csvContent, "utf-8", (err) => {
+    writeFileHandel(path, inputData) {
+        fs.writeFileSync(path, inputData, "utf-8", (err) => {
             if (err) {
                 throw new Error("Error writing CSV file:", err);
             }
@@ -146,9 +139,9 @@ class CsvFilter {
      * @returns {Object} Filtered members by month of birth
      */
     filterMemberByMonthBirthDay() {
-        const data = this.#handelReadFile();       
-        const arrMonths = this.#arrMonths();       
-        const result = {};                         
+        const data = this.#handelReadFile();
+        const arrMonths = this.#arrMonths();
+        const result = {};
 
         arrMonths.forEach(month => {
             result[`month_${month}`] = { members: [], total: 0 };
@@ -169,10 +162,27 @@ class CsvFilter {
         return result;
     }
 
+    writeTxtFileFilterBirthday() {
+        const data = this.filterMemberByMonthBirthDay();
+        let output = "";
+        let c = 0;
 
+        for (let m in data) {
+            data[m].members.forEach(member => {
+                output += `${member}\n`;
+            });
+            output += "---------------------------------------------------------\n";
+            output += `Tổng số thành viên: ${data[m].total}\n\n`;
+            this.writeFileHandel(`./Results/birthday_${m}.txt`, output);
+            output = "";
+            c++;
+        }
+
+        return c === 12;
+    }
 }
 
 let s1 = new CsvFilter()
 // console.log(s1.getDataMember());
 // console.log(s1.filterMemberClubCommittee());
-console.log(s1.filterMemberByMonthBirthDay());
+console.log(s1.writeTxtFileFilterBirthday());
