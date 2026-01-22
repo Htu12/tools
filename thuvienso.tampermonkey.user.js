@@ -8,7 +8,7 @@
 // @homepageURL  https://github.com/Htu12/tools
 // @downloadURL  https://raw.githubusercontent.com/Htu12/tools/refs/heads/main/thuvienso.tampermonkey.user.js
 // @updateURL    https://raw.githubusercontent.com/Htu12/tools/refs/heads/main/thuvienso.tampermonkey.user.js
-// @match        https://thuvienso.apd.edu.vn/tvs/*
+// @match        https://thuvienso.apd.edu.vn/*
 // @exclude      https://thuvienso.apd.edu.vn/tvs/*
 // @run-at       document-idle
 // @grant        none
