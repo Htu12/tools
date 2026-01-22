@@ -6,8 +6,8 @@
 // @author       Huu Tu
 // @require      https://raw.githubusercontent.com/Htu12/tools/refs/heads/main/download_doc.js
 // @homepageURL  https://github.com/Htu12/tools
-// @downloadURL  https://raw.githubusercontent.com/firetofficial/bypass-rophim-vip/refs/heads/main/thuvienso.tampermonkey.user.js
-// @updateURL    https://raw.githubusercontent.com/firetofficial/bypass-rophim-vip/refs/heads/main/thuvienso.tampermonkey.user.js
+// @downloadURL  https://raw.githubusercontent.com/Htu12/tools/refs/heads/main/thuvienso.tampermonkey.user.js
+// @updateURL    https://raw.githubusercontent.com/Htu12/tools/refs/heads/main/thuvienso.tampermonkey.user.js
 // @match        https://thuvienso.apd.edu.vn/tvs/*
 // @exclude      https://thuvienso.apd.edu.vn/tvs/*
 // @run-at       document-idle
