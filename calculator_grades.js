@@ -23,7 +23,7 @@ function extractGrades(selectedSubjectCodes = []) {
     "Mã học phần": "subjectCode",
     "Tên học phần": "subjectName",
     "Số TC": "credits",
-    "TKHP": "finalScore",
+    TKHP: "finalScore",
   };
 
   headerCells.forEach((cell, index) => {
@@ -99,22 +99,14 @@ function calculateAverageGPA(courses, convertTo4Scale = true) {
       acc.totalCredits += course.credit_hours;
       return acc;
     },
-    { totalPoints: 0, totalCredits: 0 }
+    { totalPoints: 0, totalCredits: 0 },
   );
 
   return totalCredits === 0 ? 0 : (totalPoints / totalCredits).toFixed(2);
 }
 
 (function main() {
-  const selectedSubjectCodes = [
-    "ĐNQT15",
-    "TCQT12",
-    "TMQT11",
-    "ĐNTC04",
-    "QTKD14",
-    "ĐNNV03",
-    "QLCD01",
-  ];
+  const selectedSubjectCodes = [];
 
   const gradesData = extractGrades(selectedSubjectCodes);
 

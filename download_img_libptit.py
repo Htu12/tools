@@ -16,7 +16,7 @@ SUBFOLDER = ""
 img_dir = "downloaded_images"
 os.makedirs(img_dir, exist_ok=True)
 
-TOTAL_PAGE = 
+TOTAL_PAGE = 0
 image_list = []
 
 # Tải từng ảnh về

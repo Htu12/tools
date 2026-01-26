@@ -26,7 +26,7 @@
       target = 2;
     } else {
       console.error(
-        "[ERROR] Không tìm thấy link 'Xem toàn văn'. Cấu trúc web có thể đã đổi."
+        "[ERROR] Không tìm thấy link 'Xem toàn văn'. Cấu trúc web có thể đã đổi.",
       );
       return;
     }
