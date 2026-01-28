@@ -28,6 +28,7 @@
       console.error(
         "[ERROR] Không tìm thấy link 'Xem toàn văn'. Cấu trúc web có thể đã đổi.",
       );
+      resetButton();
       return;
     }
 

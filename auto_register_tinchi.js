@@ -1,16 +1,3 @@
-// ==UserScript==
-// @name         APD AutoRegister (resilient)
-// @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Tự động view lớp, phát hiện slot trống và chốt đăng ký có kiểm soát
-// @author       Huu Tu
-// @match        http://tinchi.apd.edu.vn/CMCSoft.IU.Web.info/StudyRegister/StudyRegister.aspx
-// @match        https://tinchi.apd.edu.vn/CMCSoft.IU.Web.info/StudyRegister/StudyRegister.aspx
-// @icon         https://images.icon-icons.com/4321/PNG/96/direction_arrow_multimedia_option_inport_insert_icon_267818.png
-// @run-at       document-idle
-// @grant        none
-// ==/UserScript==
-
 (function () {
   "use strict";
 
