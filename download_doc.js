@@ -16,6 +16,9 @@
     var match2 = htmlContent.match(regex2);
 
     var fullLink = null;
+    var bookName =
+      document.getElementsByClassName("title_book")[0].textContent.trim() ||
+      "Tai_lieu";
     var target = null; // 1: xemtoanvan, 2: window.open
 
     if (match1) {
@@ -76,6 +79,7 @@
 
         // 5. Chuyển đổi và Tải về
         var byteCharacters = atob(cleanData);
+
         var byteNumbers = new Array(byteCharacters.length);
         for (var i = 0; i < byteCharacters.length; i++) {
           byteNumbers[i] = byteCharacters.charCodeAt(i);
@@ -85,7 +89,7 @@
 
         var link = document.createElement("a");
         link.href = window.URL.createObjectURL(blob);
-        link.download = `Tai_lieu_${docId}.pdf`;
+        link.download = `${bookName}_${docId}.pdf`;
         link.click();
 
         console.log("[INFO] HOÀN TẤT!");
