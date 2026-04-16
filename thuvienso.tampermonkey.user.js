@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         APD PDF Downloader
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  Tự động tìm hash và tải PDF từ thuvienso.apd.edu.vn
 // @author       Huu Tu
 // @require      https://raw.githubusercontent.com/Htu12/tools/main/download_doc.js?v=1.3
