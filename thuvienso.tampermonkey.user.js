@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         APD PDF Downloader
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  Tự động tìm hash, lọc mã rác và tải PDF từ thuvienso.apd.edu.vn
+// @version      1.3
+// @description  Tự động tìm hash và tải PDF từ thuvienso.apd.edu.vn
 // @author       Huu Tu
-// @require      https://raw.githubusercontent.com/Htu12/tools/refs/heads/main/download_doc.js
+// @require      https://raw.githubusercontent.com/Htu12/tools/main/download_doc.js?v=1.3
 // @homepageURL  https://github.com/Htu12/tools
-// @downloadURL  https://raw.githubusercontent.com/Htu12/tools/refs/heads/main/thuvienso.tampermonkey.user.js
-// @updateURL    https://raw.githubusercontent.com/Htu12/tools/refs/heads/main/thuvienso.tampermonkey.user.js
+// @downloadURL  https://raw.githubusercontent.com/Htu12/tools/main/thuvienso.tampermonkey.user.js
+// @updateURL    https://raw.githubusercontent.com/Htu12/tools/main/thuvienso.tampermonkey.user.js
 // @match        https://thuvienso.apd.edu.vn/*
 // @exclude      https://thuvienso.apd.edu.vn/tvs/*
 // @run-at       document-idle
