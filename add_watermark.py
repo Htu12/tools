@@ -106,6 +106,6 @@ def batch_process_images(input_folder, output_folder, logo_path):
 
 if __name__ == "__main__":
     batch_process_images(
-        input_folder= r"", 
-        output_folder= r"", 
-        logo_path= r"")
+        input_folder= r"<INPUT_FOLDER>", 
+        output_folder= r"<OUTPUT_FOLDER>", 
+        logo_path= r"<LOGO_PATH>")
