@@ -9,14 +9,14 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 ##
 
 BASE_URL = "http://dlib.ptit.edu.vn/flowpaper/services/view.php?doc="
-DOC_ID = ""
-SUBFOLDER = ""
+DOC_ID = "<DOC_ID>"
+SUBFOLDER = "<SUBFOLDER>"
 
 # Thư mục lưu ảnh tạm thời
 img_dir = "downloaded_images"
 os.makedirs(img_dir, exist_ok=True)
 
-TOTAL_PAGE = 0
+TOTAL_PAGE = 217
 image_list = []
 
 # Tải từng ảnh về

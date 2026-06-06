@@ -1,198 +1,146 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
+const fs = require('fs');
+const path = require('path');
 
-class CsvFilter {
-  #CONSTANT = {
-    DEFAULT_FILEPATH: "./nhansu_vii.csv",
-  };
-
-  /**
-   * @param {String} filePath
-   */
-  constructor(filePath) {
-    this.filePath = filePath || this.#CONSTANT.DEFAULT_FILEPATH;
-  }
-
-  /**
-   * Handles reading the CSV file and parsing its content.
-   * @returns {Array} data
-   */
-  #handelReadFile() {
-    let result = [];
-    fs.readFileSync(this.filePath, "utf-8")
-      .split("\n")
-      .forEach((member) => {
-        if (!member.trim()) return; // skip empty lines
-
-        // console.log(member);
-        const [
-          memberNo,
-          fullName,
-          phoneNumber,
-          dateOfBirth,
-          address,
-          clubCommittee,
-          position,
-        ] = member.split(",").slice(0, 7);
-        let obj = {
-          memberNo: memberNo.trim(),
-          fullName: fullName.trim(),
-          phoneNumber: phoneNumber.trim(),
-          dateOfBirth: dateOfBirth.trim(),
-          address: address.trim(),
-          clubCommittee: clubCommittee.trim(),
-          position: position.trim(),
-        };
-        result.push(obj);
-      });
-
-    return result;
-  }
-
-  /**
-   * Retrieves the unique club committees from the member data.
-   * @returns {Array} Unique club committees
-   */
-  #options() {
-    let data = this.#handelReadFile();
-    let result = [];
-
-    data.forEach((member) => {
-      let f = member.clubCommittee;
-      if (!result.includes(f)) {
-        result.push(f);
-      }
-    });
-
-    return result;
-  }
-
-  /**
-   * Retrieves the unique months from the member data.
-   * @returns {Array} Unique months
-   */
-  #arrMonths() {
-    let data = this.#handelReadFile();
-    let result = [];
-
-    data.forEach((member) => {
-      let m = member.dateOfBirth.split("/")[1];
-
-      //check
-      // Number(m) <= 12 ? console.log(m) : console.log("memNo: ", v.memberNo, "\tMonth: ", Number(m));
-
-      if (!result.includes(m)) {
-        result.push(m);
-      }
-    });
-
-    return result;
-  }
-
-  /**
-   * Retrieves the total number of members.
-   * @returns {Number} Total number of members
-   */
-  #totalMember() {
-    return this.#handelReadFile().length;
-  }
-
-  /**
-   * Retrieves the member data.
-   * @returns {Array} Member data
-   */
-  getDataMember() {
-    return this.#handelReadFile();
-  }
-
-  /**
-   * Writes the member data to a new CSV file.
-   * @param {String} path - The file path to write the new CSV file.
-   */
-  writeFileHandel(path, inputData) {
-    fs.writeFileSync(path, inputData, "utf-8", (err) => {
-      if (err) {
-        throw new Error("Error writing CSV file:", err);
-      }
-      console.log("Successfully!");
-    });
-  }
-
-  /**
-   * Filters members by their club committee.
-   * @returns {Object} Filtered members by club committee
-   */
-  filterMemberClubCommittee() {
-    let op = this.#options();
-    let data = this.#handelReadFile();
-    let result = [];
-
-    op.forEach((option) => {
-      result[option] = [];
-
-      data.forEach((member) => {
-        if (member.clubCommittee === option) {
-          result[option].push(member);
+class TTLT {
+    #CONST = {
+        DEFAULT_PATH: './data.csv',
+        OUTPUT_DIR: './Results',
+        ROLE_PRIORITY: {
+            'Cố Vấn': 1,
+            'Trưởng Ban': 2,
+            'Phó Ban': 2, // Cùng cấp ưu tiên
+            'Thành Viên': 3
         }
-      });
-    });
+    };
 
-    result["total"] = this.#totalMember();
-
-    return result;
-  }
-
-  /**
-   * Filters members by their month of birth.
-   * @returns {Object} Filtered members by month of birth
-   */
-  filterMemberByMonthBirthDay() {
-    const data = this.#handelReadFile();
-    const arrMonths = this.#arrMonths();
-    const result = {};
-
-    arrMonths.forEach((month) => {
-      result[`month_${month}`] = { members: [], total: 0 };
-    });
-
-    data.forEach((member) => {
-      const memMonth = String(
-        member?.dateOfBirth?.split?.("/")?.[1] || "",
-      ).padStart(2, "0");
-
-      const key = `month_${memMonth}`;
-      if (result[key]) {
-        const line = `${member.fullName} - ${member.dateOfBirth} - ${member.clubCommittee} - ${member.position}`;
-        result[key].members.push(line);
-        result[key].total += 1;
-      }
-    });
-
-    return result;
-  }
-
-  writeTxtFileFilterBirthday() {
-    const data = this.filterMemberByMonthBirthDay();
-    let output = "";
-    let c = 0;
-
-    for (let m in data) {
-      data[m].members.forEach((member) => {
-        output += `${member}\n`;
-      });
-      output += "---------------------------------------------------------\n";
-      output += `Tổng số thành viên: ${data[m].total}\n\n`;
-      this.writeFileHandel(`./Results/birthday_${m}.txt`, output);
-      output = "";
-      c++;
+    constructor(filePath) {
+        this.filePath = filePath || this.#CONST.DEFAULT_PATH;
     }
 
-    return c === 12;
-  }
+    // --- CÁC PHƯƠNG THỨC PRIVATE ---
+
+    #writeFileSync(filePath, data) {
+        try {
+            const dir = path.dirname(filePath);
+
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+
+            fs.writeFileSync(filePath, data, 'utf-8');
+            console.log(`Đã xuất file thành công: ${filePath}`);
+        } catch (err) {
+            console.error(`Lỗi khi ghi file ${filePath}:`, err.message);
+        }
+    }
+
+    //1. Đọc và phân tích dữ liệu từ file CSV
+    #getParsedData() {
+        if (!fs.existsSync(this.filePath)) {
+            console.error(`Không tìm thấy file: ${this.filePath}`);
+            return [];
+        }
+
+        return fs.readFileSync(this.filePath, 'utf-8')
+            .split('\n')
+            .filter(line => line.trim()) // Bỏ qua các dòng trống để tránh lỗi undefined
+            .map(member => {
+                const [fullName, dateOfBirth, clubCommittee, position] = member.split(',');
+                return {
+                    fullName: fullName?.trim() || '',
+                    dateOfBirth: dateOfBirth?.trim() || '',
+                    clubCommittee: clubCommittee?.trim() || '',
+                    position: position?.trim() || ''
+                };
+            });
+    }
+
+    // --- CÁC PHƯƠNG THỨC PUBLIC ---
+
+    // 3. Gom nhóm thành viên theo tháng sinh bằng một vòng lặp duy nhất
+    groupMembersByBirthMonth() {
+        const data = this.#getParsedData();
+        const result = {};
+
+        data.sort((a, b) => {
+            const priorityA = this.#CONST.ROLE_PRIORITY[a.position] || 99; // Chức lạ đẩy xuống cuối
+            const priorityB = this.#CONST.ROLE_PRIORITY[b.position] || 99;
+
+            // Sắp xếp theo chức vụ trước
+            if (priorityA !== priorityB) {
+                return priorityA - priorityB;
+            }
+
+            //Nếu cùng chức vụ, sắp xếp theo độ tuổi
+            const [dayA, monthA, yearA] = a.dateOfBirth.split('/');
+            const [dayB, monthB, yearB] = b.dateOfBirth.split('/');
+
+            const timeA = new Date(`${yearA}-${monthA}-${dayA}`).getTime();
+            const timeB = new Date(`${yearB}-${monthB}-${dayB}`).getTime();
+
+            return timeA - timeB;
+        });
+
+        // Gom nhóm theo tháng
+        data.forEach(member => {
+            const month = member.dateOfBirth?.split('/')[1]?.padStart(2, '0');
+
+            if (!month) return; // Bỏ qua nếu dữ liệu ngày sinh bị lỗi
+
+            const key = `month_${month}`;
+            if (!result[key]) {
+                result[key] = { members: [], total: 0 };
+            }
+
+            const line = `${member.fullName} - ${member.dateOfBirth} - ${member.clubCommittee} - ${member.position}`;
+            result[key].members.push(line);
+            result[key].total += 1;
+        });
+
+        return result;
+    }
+
+    // 4. Xuất file TXT
+    writeTxtFileFilterBirthday() {
+        const groupedData = this.groupMembersByBirthMonth();
+        let filesCreated = 0;
+
+        for (const [key, data] of Object.entries(groupedData)) {
+            const output = data.members.join('\n') +
+                `\n---------------------------------------------------------\n` +
+                `Tổng số thành viên: ${data.total}\n\n`;
+
+            this.#writeFileSync(`${this.#CONST.OUTPUT_DIR}/birthday_${key}.txt`, output);
+            filesCreated++;
+        }
+
+        return filesCreated > 0;
+    }
+
+    cleanRawData(rawFilePath) {
+        const map = {
+            'tcsk': 'Ban Tổ Chức Sự Kiện',
+            'tt': 'Ban Truyền Thông',
+            'ns': 'Ban Nhân Sự',
+            'cq': 'Ban Cần Quỹ',
+        };
+
+        const rawData = fs.readFileSync(rawFilePath, "utf-8").split("\n").filter(line => line.trim());
+        const result = rawData.map(member => {
+            const [memberNo, fullName, phoneNumber, dateOfBirth, address, position] = member.split(",").map(i => i?.trim());
+
+            const capitalizedName = fullName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+            const formattedDate = dateOfBirth.split('/').map(d => d.padStart(2, '0')).join('/');
+            const deptKey = rawFilePath.split('/').pop().split('.')[0];
+
+            return `${capitalizedName},${formattedDate},${map[deptKey] || 'Chưa rõ'},${position}`;
+        });
+
+        this.#writeFileSync(this.filePath, result.join('\n'));
+    }
 }
 
-let s1 = new CsvFilter();
-// console.log(s1.getDataMember());
-// console.log(s1.filterMemberClubCommittee());
-console.log(s1.writeTxtFileFilterBirthday());
+const a = new TTLT();
+a.writeTxtFileFilterBirthday();
