@@ -9,9 +9,11 @@ class TTLT {
         OUTPUT_DIR: './Results',
         ROLE_PRIORITY: {
             'Cố Vấn': 1,
-            'Trưởng Ban': 2,
-            'Phó Ban': 2, // Cùng cấp ưu tiên
-            'Thành Viên': 3
+            'Chủ Nhiệm': 2,
+            'Phó Chủ Nhiệm': 3,// Cùng cấp ưu tiên
+            'Trưởng Ban': 4,
+            'Phó Ban': 5, 
+            'Thành Viên': 6
         }
     };
 
@@ -68,7 +70,7 @@ class TTLT {
             const priorityA = this.#CONST.ROLE_PRIORITY[a.position] || 99; // Chức lạ đẩy xuống cuối
             const priorityB = this.#CONST.ROLE_PRIORITY[b.position] || 99;
 
-            // Sắp xếp theo chức vụ trước
+            // Sắp xếp theo chức vụ
             if (priorityA !== priorityB) {
                 return priorityA - priorityB;
             }
@@ -119,6 +121,22 @@ class TTLT {
         return filesCreated > 0;
     }
 
+    //filter member year birthday
+    filterMemberByBirthYear(year) {
+        const data = this.#getParsedData();
+        const result = [];
+
+        data.filter(member => {
+            const memberYear = member.dateOfBirth?.split('/')[2];
+            if (memberYear === String(year)) {
+                result.push(`${member.fullName} - ${memberYear} - ${member.clubCommittee} - ${member.position}`);
+            }
+        });
+
+        return result.join('\n');
+    }
+
+
     cleanRawData(rawFilePath) {
         const map = {
             'tcsk': 'Ban Tổ Chức Sự Kiện',
@@ -128,6 +146,7 @@ class TTLT {
         };
 
         const rawData = fs.readFileSync(rawFilePath, "utf-8").split("\n").filter(line => line.trim());
+
         const result = rawData.map(member => {
             const [memberNo, fullName, phoneNumber, dateOfBirth, address, position] = member.split(",").map(i => i?.trim());
 
@@ -143,4 +162,4 @@ class TTLT {
 }
 
 const a = new TTLT();
-a.writeTxtFileFilterBirthday();
+console.log(a.writeTxtFileFilterBirthday());
